@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "843857777864",
+    "project_id": "mynote-devby-aryan",
+    "storage_bucket": "mynote-devby-aryan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843857777864:android:32d1affe0ceeb25b9541fd",
+        "android_client_info": {
+          "package_name": "com.aryan.mynote"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQUsLlh9MvdIzRd_WT8y_AUcUPFYfb6qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843857777864:android:0fc936b520dcebfe9541fd",
+        "android_client_info": {
+          "package_name": "com.aryan.mynotes.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQUsLlh9MvdIzRd_WT8y_AUcUPFYfb6qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
