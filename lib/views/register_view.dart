@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
-import 'package:mynotes/utils/logger.dart';
+import 'package:mynotes/utilities/logger.dart';
+import 'package:mynotes/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -60,14 +61,36 @@ class _RegisterViewState extends State<RegisterView> {
                 logger.i(userCredential);
               } on FirebaseAuthException catch (e) {
                 if (e.code == "weak-password") {
-                  logger.i("Weak password");
+                  // ignore: use_build_context_synchronously
+                  await showErrorDialog(
+                    context,
+                    "Your password is weak",
+                  );
                 } else if (e.code == "email-already-in-use") {
-                  logger.i("Email already in use");
+                  // ignore: use_build_context_synchronously
+                  await showErrorDialog(
+                    context,
+                    "Email is already in use",
+                  );
                 } else if (e.code == "invalid-email") {
-                  logger.i("Invalid email");
+                  // ignore: use_build_context_synchronously
+                  await showErrorDialog(
+                    context,
+                    "This email is invalid",
+                  );
                 } else {
-                  logger.i("Something bad happend");
+                  // ignore: use_build_context_synchronously
+                  await showErrorDialog(
+                    context,
+                    e.message.toString(),
+                  );
                 }
+              } catch (e) {
+                // ignore: use_build_context_synchronously
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
               }
             },
             child: const Text("Register"),
