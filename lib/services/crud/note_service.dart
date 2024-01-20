@@ -9,8 +9,14 @@ import 'package:sqflite/sqflite.dart';
 class NotesService {
   Database? _db;
 
-static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  static final NotesService _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _shared;
 
   Database _getDatebaseOrThrow() {
@@ -35,8 +41,8 @@ static final NotesService _shared = NotesService._sharedInstance();
       throw DatabaseAlreadyOpenException();
     }
     try {
-      final docsPath = await getApplicationDocumentsDirectory();
-      final dbPath = join(docsPath.path, dbName);
+      final docsPath = await getDatabasesPath();
+      final dbPath = join(docsPath, dbName);
       final db = await openDatabase(dbPath);
       _db = db;
       // create user table
@@ -221,8 +227,7 @@ static final NotesService _shared = NotesService._sharedInstance();
 
   List<DatabaseNote> _notes = [];
 
-  final _notesStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
@@ -305,15 +310,7 @@ const emailColumn = "email";
 const userIdColumn = "user_id";
 const textColumn = "text";
 const isSyncedWithCloudColumn = "is_synced_with_cloud";
-const createUserTable = """CREATE TABLE IF NOT EXISTS "user" (
-        "id" INTEGER NOT NULL,
-        "email" TEXT NOT NULL UNIQUE,
-        "password" TEXT NOT NULL
-      );""";
-const createNoteTable = """CREATE TABLE IF NOT EXISTS "note" (
-        "id" INTEGER NOT NULL,
-        "user_id" INTEGER NOT NULL,
-        "text" TEXT,
-        "is_synced_with_cloud" INTEGER NOT NULL DEFAULT 0,
-        FOREIGN KEY("user_id") REFERENCES "user"("id")
-      );""";
+const createUserTable =
+    "CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE);";
+const createNoteTable =
+    "CREATE TABLE IF NOT EXISTS note (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id	INTEGER NOT NULL, text	TEXT, is_synced_with_cloud	INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES user(id)));";
