@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/services/auth/auth_exeptions.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
-import 'package:mynotes/utilities/show_error_dialog.dart';
+import 'package:mynotes/utilities/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -59,7 +59,7 @@ class _RegisterViewState extends State<RegisterView> {
                 );
                 await AuthService.firebase().sendEmailVerification();
                 // ignore: use_build_context_synchronously
-                Navigator.of(context).pushNamed( 
+                Navigator.of(context).pushNamed(
                   verifyEmailRoute,
                 );
               } on WeakPasswordAuthExeption {
