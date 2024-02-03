@@ -10,10 +10,14 @@ class SimpleTextFieldState extends State<SimpleTextField> {
   late int? maxLength;
   late int? maxLines;
   late int? lineSpace;
+  late bool? enableSuggestions;
+  late bool? autocorrect;
 
   @override
   void initState() {
     super.initState();
+    autocorrect = widget.autocorrect;
+    enableSuggestions = widget.enableSuggestions;
     lineSpace = widget.lineSpace;
     maxLines = widget.maxLines;
     maxLength = widget.maxLength;
@@ -136,6 +140,8 @@ class SimpleTextFieldState extends State<SimpleTextField> {
             const SizedBox(height: 6),
           ],
           TextField(
+            autocorrect: autocorrect ?? true,
+            enableSuggestions: enableSuggestions ?? true,
             maxLines: maxLines,
             maxLength: maxLength,
             focusNode: focusNode,

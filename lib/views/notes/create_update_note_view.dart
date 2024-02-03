@@ -125,27 +125,28 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
               _setupTextControllerListener();
               _setupTitleControllerListener();
               return Padding(
-              padding: const EdgeInsets.all(16.0), // Adjust the value as needed
-              child: Column(
-                children: [
-                  SimpleTextField(
-                    textEditingController: _titleController,
-                    labelText: "Title",
-                    maxLength: 100,
-                    textInputType: TextInputType.multiline,
-                  ),
-                  const SimpleSizedBox(height: 12),
-                  SimpleTextField(
-                    textEditingController: _textController,
-                    labelText: "Text",
-                    maxLength: 10000,
-                    textInputType: TextInputType.multiline,
-                    maxLines: null,
-                    lineSpace: 2,
-                  ),
-                ],
-              ),
-            );
+                padding:
+                    const EdgeInsets.all(16.0), // Adjust the value as needed
+                child: Column(
+                  children: [
+                    SimpleTextField(
+                      textEditingController: _titleController,
+                      labelText: "Title",
+                      maxLength: 100,
+                      textInputType: TextInputType.multiline,
+                    ),
+                    const SimpleSizedBox(height: 0),
+                    SimpleTextField(
+                      textEditingController: _textController,
+                      labelText: "Text",
+                      maxLength: 10000,
+                      textInputType: TextInputType.multiline,
+                      maxLines: null,
+                      lineSpace: 2,
+                    ),
+                  ],
+                ),
+              );
             default:
               return const CircularProgressIndicator();
           }

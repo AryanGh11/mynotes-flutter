@@ -30,6 +30,8 @@ class SimpleTextField extends StatefulWidget {
       this.maxLength,
       this.maxLines,
       this.lineSpace,
+      this.enableSuggestions,
+      this.autocorrect,
       Key? key})
       : super(key: key);
 
@@ -48,6 +50,8 @@ class SimpleTextField extends StatefulWidget {
   final int? maxLength;
   final int? maxLines;
   final int? lineSpace;
+  final bool? enableSuggestions;
+  final bool? autocorrect;
 
   /// Text placed below the text field
   final String? helperText;

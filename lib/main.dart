@@ -10,9 +10,11 @@ import 'package:mynotes/views/verify_email_view.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
-    title: 'Flutter Demo',
+    title: 'My Notes',
     theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.purpleAccent,
+      ),
       useMaterial3: true,
     ),
     home: const HomePage(),
