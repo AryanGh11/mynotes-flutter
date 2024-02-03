@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/crud/note_service.dart';
 import 'package:mynotes/utilities/generics/get_arguments.dart';
+import 'package:mynotes/widgets/sized_box/simple_sized_box.dart';
+import 'package:mynotes/widgets/text_fileds/simple_text_filed.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({super.key});
@@ -14,11 +16,13 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   DatabaseNote? _note;
   late final NotesService _notesService;
   late final TextEditingController _textController;
+  late final TextEditingController _titleController;
 
   @override
   void initState() {
     _notesService = NotesService();
     _textController = TextEditingController();
+    _titleController = TextEditingController();
     super.initState();
   }
 
@@ -34,9 +38,24 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     );
   }
 
+  void _titleControllerListener() async {
+    final note = _note;
+    if (note == null) {
+      return;
+    }
+    final text = _textController.text;
+    final title = _titleController.text;
+    await _notesService.updateNote(note: note, title: title, text: text);
+  }
+
   void _setupTextControllerListener() {
     _textController.removeListener(_textControllerListener);
     _textController.addListener(_textControllerListener);
+  }
+
+  void _setupTitleControllerListener() {
+    _titleController.removeListener(_titleControllerListener);
+    _titleController.addListener(_titleControllerListener);
   }
 
   Future<DatabaseNote> createOrGetExistingNote(BuildContext context) async {
@@ -44,6 +63,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
 
     if (widgetNote != null) {
       _note = widgetNote;
+      _titleController.text = widgetNote.title;
       _textController.text = widgetNote.text;
       return widgetNote;
     }
@@ -72,9 +92,11 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   void _saveNoteIfTextNotEmpty() async {
     final note = _note;
     final text = _textController.text;
+    final title = _titleController.text;
     if (note != null && text.isNotEmpty) {
       await _notesService.updateNote(
         note: note,
+        title: title,
         text: text,
       );
     }
@@ -85,6 +107,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     _deleteNoteIfTextIsEmpty();
     _saveNoteIfTextNotEmpty();
     _textController.dispose();
+    _titleController.dispose();
     super.dispose();
   }
 
@@ -100,13 +123,29 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               _setupTextControllerListener();
-              return TextField(
-                controller: _textController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: const InputDecoration(
-                    hintText: "Start typing your note..."),
-              );
+              _setupTitleControllerListener();
+              return Padding(
+              padding: const EdgeInsets.all(16.0), // Adjust the value as needed
+              child: Column(
+                children: [
+                  SimpleTextField(
+                    textEditingController: _titleController,
+                    labelText: "Title",
+                    maxLength: 100,
+                    textInputType: TextInputType.multiline,
+                  ),
+                  const SimpleSizedBox(height: 12),
+                  SimpleTextField(
+                    textEditingController: _textController,
+                    labelText: "Text",
+                    maxLength: 10000,
+                    textInputType: TextInputType.multiline,
+                    maxLines: null,
+                    lineSpace: 2,
+                  ),
+                ],
+              ),
+            );
             default:
               return const CircularProgressIndicator();
           }

@@ -125,9 +125,11 @@ class NotesService {
     }
 
     // create the note
+    const title = "Title";
     const text = "";
     final noteId = await db.insert(noteTable, {
       userIdColumn: owner.id,
+      titleColumn: title,
       textColumn: text,
       isSyncedWithCloudColumn: 1,
     });
@@ -135,6 +137,7 @@ class NotesService {
     final note = DatabaseNote(
       id: noteId,
       userId: owner.id,
+      title: title,
       text: text,
       isSyncedWithCloud: true,
     );
@@ -202,6 +205,7 @@ class NotesService {
   Future<DatabaseNote> updateNote({
     required DatabaseNote note,
     required String text,
+    String? title,
   }) async {
     await _ensureDbIsOpen();
     final db = _getDatebaseOrThrow();
@@ -210,6 +214,7 @@ class NotesService {
     await getNote(id: note.id);
 
     final updatesCount = await db.update(noteTable, {
+      titleColumn: title ?? "",
       textColumn: text,
       isSyncedWithCloudColumn: 0,
     });
@@ -274,12 +279,14 @@ class DatabaseUser {
 class DatabaseNote {
   final int id;
   final int userId;
+  final String title;
   final String text;
   final bool isSyncedWithCloud;
 
   DatabaseNote({
     required this.id,
     required this.userId,
+    required this.title,
     required this.text,
     required this.isSyncedWithCloud,
   });
@@ -287,13 +294,14 @@ class DatabaseNote {
   DatabaseNote.fromRow(Map<String, Object?> map)
       : id = map[idColumn] as int,
         userId = map[userIdColumn] as int,
+        title = map[titleColumn] as String,
         text = map[textColumn] as String,
         isSyncedWithCloud =
             (map[isSyncedWithCloudColumn] as int) == 1 ? true : false;
 
   @override
   String toString() =>
-      "Note, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud, text = $text";
+      "Note, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud, title = $title";
 
   @override
   bool operator ==(covariant DatabaseNote other) => id == other.id;
@@ -308,9 +316,10 @@ const userTable = "user";
 const idColumn = "id";
 const emailColumn = "email";
 const userIdColumn = "user_id";
+const titleColumn = "title";
 const textColumn = "text";
 const isSyncedWithCloudColumn = "is_synced_with_cloud";
 const createUserTable =
     "CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE);";
 const createNoteTable =
-    "CREATE TABLE IF NOT EXISTS note (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id	INTEGER NOT NULL, text	TEXT, is_synced_with_cloud	INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES user(id)));";
+    "CREATE TABLE IF NOT EXISTS note (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id	INTEGER NOT NULL,title TEXT,text	TEXT, is_synced_with_cloud	INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES user(id));";
