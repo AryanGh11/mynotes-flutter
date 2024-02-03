@@ -3,6 +3,9 @@ import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/services/auth/auth_exeptions.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/utilities/dialogs/error_dialog.dart';
+import 'package:mynotes/widgets/buttons/simple_elevated_button.dart';
+import 'package:mynotes/widgets/buttons/simple_ouline_button.dart';
+import 'package:mynotes/widgets/text_fileds/simple_text_filed.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -35,20 +38,23 @@ class _RegisterViewState extends State<RegisterView> {
       appBar: AppBar(title: const Text("Register")),
       body: Column(
         children: [
-          TextField(
-              controller: _email,
-              enableSuggestions: false,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(hintText: "Enter your email")),
-          TextField(
-              controller: _password,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration:
-                  const InputDecoration(hintText: "Enter your password")),
-          TextButton(
+          SimpleTextField(
+            hintText: "Enter your email",
+            textEditingController: _email,
+            enableSuggestions: false,
+            autocorrect: false,
+            textInputType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 8),
+          SimpleTextField(
+            hintText: "Enter your password",
+            textEditingController: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+          ),
+          const SizedBox(height: 16),
+          SimpleElevatedButton(
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
@@ -90,7 +96,8 @@ class _RegisterViewState extends State<RegisterView> {
             },
             child: const Text("Register"),
           ),
-          TextButton(
+          const SizedBox(height: 8),
+          SimpleOutlinedButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   loginRoute,
